@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_file
 from rembg import remove
 from PIL import Image, ImageOps
+from app import app
 import io
 import os
 
