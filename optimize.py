@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, send_file
 from rembg import remove
-from PIL import Image, ImageOps
-from app import app
+from PIL import Image
 import io
 import os
 
@@ -39,6 +38,10 @@ class ImageProcessor:
 
 processor = ImageProcessor()
 
+@app.route('/')
+def home():
+    return "Image Processing API is running!"
+
 @app.route('/process-image', methods=['POST'])
 def process_image():
     if 'image' not in request.files:
@@ -51,6 +54,8 @@ def process_image():
         os.remove(input_path)
         return send_file(output_buffer, mimetype='image/jpeg', as_attachment=True, download_name='processed_image.jpg')
     except Exception as e:
+        if os.path.exists(input_path):
+            os.remove(input_path)
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
